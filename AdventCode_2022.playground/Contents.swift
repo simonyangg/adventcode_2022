@@ -28,17 +28,16 @@ func caloriesValues() -> [[Int]] {
 
 let parsedArray = caloriesValues()
 let result = parsedArray.map { elphCalories in
-    return elphCalories.sum()
+    return elphCalories.reduce(0, +)
 }
 
-let resultMax = result.max()
-    
+let day1Part1Answer = result.max()
+print("Day1 part1 answer is:\(String(describing: (day1Part1Answer)))")
 
-print("Max is:\(String(describing: resultMax))")
-
-extension Array where Element == Int {
-    
-    func sum() -> Int {
-        return self.reduce(0, +)
-    }
+let sortedArray: [Int] = result.sorted { value1, value2 in
+    return value1 > value2
 }
+
+let day1Part2Aswer = sortedArray.prefix(3).reduce(0, +)
+print("Day1 part2 answer is:\(String(describing: (day1Part2Aswer)))")
+
