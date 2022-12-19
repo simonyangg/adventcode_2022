@@ -26,20 +26,6 @@ func caloriesValues() -> [[Int]] {
     return parsedArray
 }
 
-func listOfCombinations() -> [String] {
-    var arrayOfCombinations = [String]()
-        do {
-            if let path = Bundle.main.path(forResource: "strategy_input", ofType: "txt") {
-                let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
-                arrayOfCombinations = data.components(separatedBy: "\n")
-            }
-        } catch let err as NSError {
-            print(err)
-        }
-    
-    return arrayOfCombinations
-}
-
 let parsedArray = caloriesValues()
 let result = parsedArray.map { elphCalories in
     return elphCalories.reduce(0, +)
@@ -55,6 +41,8 @@ let sortedArray: [Int] = result.sorted { value1, value2 in
 let day1Part2Aswer = sortedArray.prefix(3).reduce(0, +)
 print("Day1 part2 answer is:\(String(describing: (day1Part2Aswer)))")
 
+
+// MARK: Day2
 // ABC
 // XYZ
 
@@ -148,6 +136,20 @@ enum Selection: String {
         default: return nil
         }
     }
+}
+
+func listOfCombinations() -> [String] {
+    var arrayOfCombinations = [String]()
+        do {
+            if let path = Bundle.main.path(forResource: "strategy_input", ofType: "txt") {
+                let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
+                arrayOfCombinations = data.components(separatedBy: "\n")
+            }
+        } catch let err as NSError {
+            print(err)
+        }
+    
+    return arrayOfCombinations
 }
 
 let arrayOfCombinations = listOfCombinations()
