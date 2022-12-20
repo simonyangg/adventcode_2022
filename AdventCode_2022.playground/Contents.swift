@@ -1,17 +1,19 @@
 import UIKit
 
-var greeting = "Hello, playground"
+var greeting = "AdventCode 2022"
+
+// MARK: Day 1
 
 func caloriesValues() -> [[Int]] {
     var arrayOfStrings: [String]?
-        do {
-            if let path = Bundle.main.path(forResource: "calories_input", ofType: "txt") {
-                let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
-                arrayOfStrings = data.components(separatedBy: "\n")
-            }
-        } catch let err as NSError {
-            print(err)
+    do {
+        if let path = Bundle.main.path(forResource: "calories_input", ofType: "txt") {
+            let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
+            arrayOfStrings = data.components(separatedBy: "\n")
         }
+    } catch let err as NSError {
+        print(err)
+    }
     var parsedArray = [[Int]]()
     var elphCaloriesArray = [Int]()
     arrayOfStrings?.forEach({ caloryString in
@@ -43,8 +45,6 @@ print("Day1 part2 answer is:\(String(describing: (day1Part2Aswer)))")
 
 
 // MARK: Day2
-// ABC
-// XYZ
 
 enum MatchResult {
     case win
@@ -56,6 +56,15 @@ enum MatchResult {
         case .win: return 6
         case .draw: return 3
         case .lose: return 0
+        }
+    }
+    
+    static func matchResultFrom(input: String?) -> MatchResult? {
+        switch input {
+        case "X": return .lose
+        case "Y": return .draw
+        case "Z": return .win
+        default: return nil
         }
     }
 }
@@ -72,7 +81,7 @@ enum Selection: String {
         case .Scissors: return 3
         }
     }
-        
+    
     static func selectionFrom(input: String?) -> Selection? {
         switch input {
         case "A": return .Rock
@@ -83,6 +92,39 @@ enum Selection: String {
         case "Z": return .Scissors
         default: return nil
         }
+    }
+    
+    func selectionForResult(result:MatchResult) -> Selection? {
+        switch self {
+        case .Rock:
+            switch result {
+            case .win:
+                return .Paper
+            case .draw:
+                return .Rock
+            case .lose:
+                return .Scissors
+            }
+        case .Paper:
+            switch result {
+            case .win:
+                return .Scissors
+            case .draw:
+                return .Paper
+            case .lose:
+                return .Rock
+            }
+        case .Scissors:
+            switch result {
+            case .win:
+                return .Rock
+            case .draw:
+                return .Scissors
+            case .lose:
+                return .Paper
+            }
+        }
+        return nil
     }
     
     static func matchresult(opponent1: Selection, opponent2: Selection) -> MatchResult {
@@ -124,30 +166,31 @@ enum Selection: String {
             let value = matchResult.value + mySelection.value
             return value
         }
-        
         return 0
     }
     
-    func opponent2Selection(opponent: String) -> Selection? {
-        switch opponent {
-        case "X": return .Rock
-        case "Y": return .Paper
-        case "Z": return .Scissors
-        default: return nil
+    static func strategicValueForInput(combinationInput: String) -> Int {
+        if let opponentSelection = Selection.selectionFrom(input: String(combinationInput.first ?? " ")),
+           let expectedResult = MatchResult.matchResultFrom(input: String(combinationInput.last ?? " ")),
+           let mySelection = opponentSelection.selectionForResult(result: expectedResult) {
+            let value = expectedResult.value + mySelection.value
+            return value
         }
+        return 0
     }
+    
 }
 
 func listOfCombinations() -> [String] {
     var arrayOfCombinations = [String]()
-        do {
-            if let path = Bundle.main.path(forResource: "strategy_input", ofType: "txt") {
-                let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
-                arrayOfCombinations = data.components(separatedBy: "\n")
-            }
-        } catch let err as NSError {
-            print(err)
+    do {
+        if let path = Bundle.main.path(forResource: "strategy_input", ofType: "txt") {
+            let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
+            arrayOfCombinations = data.components(separatedBy: "\n")
         }
+    } catch let err as NSError {
+        print(err)
+    }
     
     return arrayOfCombinations
 }
@@ -157,6 +200,13 @@ let resultsvalues = arrayOfCombinations.map { combination in
     return Selection.valueForInput(combinationInput: combination)
 }
 
-let finalresult = resultsvalues.reduce(0, +)
-print("Day 2 Part 1 result is:\(finalresult)")
+let day2Part1Result = resultsvalues.reduce(0, +)
+print("Day 2 Part 1 result is:\(day2Part1Result)")
+
+let strategicValues = arrayOfCombinations.map { combination in
+    return Selection.strategicValueForInput(combinationInput: combination)
+}
+
+let day2Part2Result = strategicValues.reduce(0, +)
+print("Day 2 Part 2 result is:\(day2Part2Result)")
 
